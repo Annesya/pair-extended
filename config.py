@@ -1,6 +1,4 @@
 from enum import Enum
-VICUNA_PATH = "/home/pchao/vicuna-13b-v1.5"
-LLAMA_PATH = "/home/pchao/Llama-2-7b-chat-hf"
 
 ATTACK_TEMP = 1
 TARGET_TEMP = 0
@@ -18,9 +16,11 @@ class Model(Enum):
     claude_2 = "claude-2.1"
     gemini = "gemini-pro"
     mixtral = "mixtral"
+    gpt_5_nano = "gpt-5-nano-2025-08-07"
 
 MODEL_NAMES = [model.value for model in Model]
 
+OPEN_SOURCE_MODELS = {Model.vicuna, Model.llama_2, Model.mixtral}
 
 HF_MODEL_NAMES: dict[Model, str] = {
     Model.llama_2: "meta-llama/Llama-2-7b-chat-hf",
@@ -28,15 +28,10 @@ HF_MODEL_NAMES: dict[Model, str] = {
     Model.mixtral: "mistralai/Mixtral-8x7B-Instruct-v0.1"
 }
 
-TOGETHER_MODEL_NAMES: dict[Model, str] = {
-    Model.llama_2: "together_ai/togethercomputer/llama-2-7b-chat",
-    Model.vicuna: "together_ai/lmsys/vicuna-13b-v1.5",
-    Model.mixtral: "together_ai/mistralai/Mixtral-8x7B-Instruct-v0.1"
-}
-
 FASTCHAT_TEMPLATE_NAMES: dict[Model, str] = {
     Model.gpt_3_5: "gpt-3.5-turbo",
     Model.gpt_4: "gpt-4",
+    Model.gpt_5_nano: "gpt-5-nano-2025-08-07",
     Model.claude_1: "claude-instant-1.2",
     Model.claude_2: "claude-2.1",
     Model.gemini: "gemini-pro",
@@ -48,12 +43,13 @@ FASTCHAT_TEMPLATE_NAMES: dict[Model, str] = {
 API_KEY_NAMES: dict[Model, str] = {
     Model.gpt_3_5:  "OPENAI_API_KEY",
     Model.gpt_4:    "OPENAI_API_KEY",
+    Model.gpt_5_nano: "OPENAI_API_KEY",
     Model.claude_1: "ANTHROPIC_API_KEY",
     Model.claude_2: "ANTHROPIC_API_KEY",
     Model.gemini:   "GEMINI_API_KEY",
-    Model.vicuna:   "TOGETHER_API_KEY",
-    Model.llama_2:  "TOGETHER_API_KEY",
-    Model.mixtral:  "TOGETHER_API_KEY",
+    Model.vicuna:   "HUGGINGFACE_API_KEY",
+    Model.llama_2:  "HUGGINGFACE_API_KEY",
+    Model.mixtral:  "HUGGINGFACE_API_KEY",
 }
 
 LITELLM_TEMPLATES: dict[Model, dict] = {

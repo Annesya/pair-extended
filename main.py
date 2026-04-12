@@ -82,8 +82,8 @@ if __name__ == '__main__':
         "--attack-model",
         default = "vicuna-13b-v1.5",
         help = "Name of attacking model.",
-        choices=["vicuna-13b-v1.5", "llama-2-7b-chat-hf", "gpt-3.5-turbo-1106", "gpt-4-0125-preview", "claude-instant-1.2", "claude-2.1", "gemini-pro", 
-        "mixtral","vicuna-7b-v1.5"]
+        choices=["vicuna-13b-v1.5", "llama-2-7b-chat-hf", "gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-5-nano-2025-08-07", "claude-instant-1.2", "claude-2.1", "gemini-pro", 
+        "mixtral"]
     )
     parser.add_argument(
         "--attack-max-n-tokens",
@@ -102,27 +102,15 @@ if __name__ == '__main__':
     ########### Target model parameters ##########
     parser.add_argument(
         "--target-model",
-        default = "vicuna-13b-v1.5", #TODO changed
+        default = "vicuna-13b-v1.5",
         help = "Name of target model.",
-        choices=["vicuna-13b-v1.5", "llama-2-7b-chat-hf", "gpt-3.5-turbo-1106", "gpt-4-0125-preview", "claude-instant-1.2", "claude-2.1", "gemini-pro",]
+        choices=["vicuna-13b-v1.5", "llama-2-7b-chat-hf", "gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-5-nano-2025-08-07", "claude-instant-1.2", "claude-2.1", "gemini-pro",]
     )
     parser.add_argument(
         "--target-max-n-tokens",
         type = int,
         default = 150,
         help = "Maximum number of generated tokens for the target."
-    )
-    parser.add_argument(
-        "--not-jailbreakbench",
-        action = 'store_true',
-        help = "Choose to not use JailbreakBench for the target model. Uses JailbreakBench as default. Not recommended."
-    )
-
-    parser.add_argument(
-        "--jailbreakbench-phase",
-        default = "dev",
-        help = "Phase for JailbreakBench. Use dev for development, test for final jailbreaking.",
-        choices=["dev","test","eval"]
     )
     ##################################################
 
@@ -131,7 +119,7 @@ if __name__ == '__main__':
         "--judge-model",
         default="gcg", #TODO changed
         help="Name of judge model. Defaults to the Llama Guard model from JailbreakBench.",
-        choices=["gpt-3.5-turbo-1106", "gpt-4-0125-preview","no-judge","jailbreakbench","gcg"]
+        choices=["gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-5-nano-2025-08-07", "no-judge","jailbreakbench","gcg"]
     )
     parser.add_argument(
         "--judge-max-n-tokens",
@@ -183,7 +171,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--evaluate-locally",
         action = 'store_true',
-        help = "Evaluate models locally rather than through Together.ai. We do not recommend this option as it may be computationally expensive and slow."
+        help = "Evaluate open-weight models locally using vLLM instead of through API. Requires GPU and sufficient VRAM."
     )
     ##################################################
 
@@ -213,5 +201,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     logger.set_level(args.verbosity)
 
-    args.use_jailbreakbench = not args.not_jailbreakbench
     main(args)

@@ -2,7 +2,7 @@ import unittest
 from conversers import AttackLM
 from fastchat.model import get_conversation_template
 
-class TestTogetherAttacker(unittest.TestCase):
+class TestAttacker(unittest.TestCase):
     def setUp(self):
         self.lm = AttackLM(model_name="vicuna-13b-v1.5",
                 max_n_tokens=100, 

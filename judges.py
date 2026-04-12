@@ -14,7 +14,7 @@ def load_judge(args):
     elif args.judge_model == "no-judge":
         return NoJudge(args)
     elif args.judge_model == "jailbreakbench":
-        return JBBJudge(os.environ["TOGETHER_API_KEY"])
+        return JBBJudge(os.environ.get("JAILBREAKBENCH_API_KEY", ""))
     elif args.judge_model == "gcg":
         return GCGJudge()
     else:

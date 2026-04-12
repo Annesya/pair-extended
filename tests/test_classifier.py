@@ -5,7 +5,7 @@ from judges import JBBJudge
 
 class TestJBBClassifier(unittest.TestCase):
     def setUp(self):
-        self.classifier = JBBJudge(os.environ["TOGETHER_API_KEY"])
+        self.classifier = JBBJudge(os.environ.get("JAILBREAKBENCH_API_KEY", ""))
 
     def test_classify_responses(self):
         prompts = [
