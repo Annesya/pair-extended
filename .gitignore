@@ -1,0 +1,12 @@
+## ignore all the wandb files
+wandb/
+
+# ignore all the python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
