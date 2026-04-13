@@ -11,10 +11,14 @@ def load_attack_and_target_models(args):
                         evaluate_locally = args.evaluate_locally
                         )
     
+    share_model = (args.evaluate_locally 
+                   and args.attack_model == args.target_model)
+    
     targetLM = TargetLM(model_name = args.target_model,
                         category = args.category,
                         max_n_tokens = args.target_max_n_tokens,
                         evaluate_locally = args.evaluate_locally,
+                        shared_model = attackLM.model if share_model else None,
                         )
     
     return attackLM, targetLM
@@ -135,6 +139,7 @@ class TargetLM():
             category: str,
             max_n_tokens: int,
             evaluate_locally: bool = False,
+            shared_model = None,
             ):
         
         self.model_name = Model(model_name)
@@ -146,7 +151,10 @@ class TargetLM():
         self.temperature = TARGET_TEMP
         self.top_p = TARGET_TOP_P
 
-        self.model = load_indiv_model(model_name, local=evaluate_locally)
+        if shared_model is not None:
+            self.model = shared_model
+        else:
+            self.model = load_indiv_model(model_name, local=evaluate_locally)
         self.category = category
 
     def get_response(self, prompts_list):
