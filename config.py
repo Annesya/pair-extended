@@ -12,6 +12,7 @@ class Model(Enum):
     llama_2 = "llama-2-7b-chat-hf"
     gpt_3_5 = "gpt-3.5-turbo-1106"
     gpt_4 = "gpt-4-0125-preview"
+    gpt_4_1_mini = "gpt-4.1-mini-2025-04-14"
     claude_1 = "claude-instant-1.2"
     claude_2 = "claude-2.1"
     gemini = "gemini-pro"
@@ -31,6 +32,7 @@ HF_MODEL_NAMES: dict[Model, str] = {
 FASTCHAT_TEMPLATE_NAMES: dict[Model, str] = {
     Model.gpt_3_5: "gpt-3.5-turbo",
     Model.gpt_4: "gpt-4",
+    Model.gpt_4_1_mini: "gpt-4",
     Model.gpt_5_nano: "gpt-5-nano-2025-08-07",
     Model.claude_1: "claude-instant-1.2",
     Model.claude_2: "claude-2.1",

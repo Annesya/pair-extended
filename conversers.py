@@ -76,13 +76,17 @@ class AttackLM():
         valid_outputs = [None] * batchsize
         new_adv_prompts = [None] * batchsize
         
+        # Only use "}" as a stop token for open-source models;
+        # API models (GPT, Claude, etc.) handle JSON termination on their own.
+        eos = ["}"] if self.initialize_output else None
+        
         for attempt in range(self.max_n_attack_attempts):
             convs_subset = [openai_conv_list[i] for i in indices_to_regenerate]
             outputs_list = self.model.batched_generate(convs_subset,
                                                         max_n_tokens = self.max_n_tokens,  
                                                         temperature = self.temperature,
                                                         top_p = self.top_p,
-                                                        extra_eos_tokens=["}"]
+                                                        extra_eos_tokens=eos
                                                     )
             
             new_indices_to_regenerate = []

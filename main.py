@@ -38,7 +38,7 @@ def main(args):
 
         # Get adversarial prompts and improvement
         extracted_attack_list = attackLM.get_attack(convs_list, processed_response_list)
-        logger.debug("Finished getting adversarial prompts.")
+        logger.debug(f"Finished getting adversarial prompts from ATTACKER [{args.attack_model}].")
 
         # Extract prompts and improvements
         adv_prompt_list = [attack["prompt"] for attack in extracted_attack_list]
@@ -48,15 +48,23 @@ def main(args):
         print(f"Memory after: {memory_after} MB")
         # Get target responses
         target_response_list = targetLM.get_response(adv_prompt_list)
-        logger.debug("Finished getting target responses.")
+        logger.debug(f"Finished getting responses from TARGET [{args.target_model}].")
         
         # Get judge scores
         judge_scores = judgeLM.score(adv_prompt_list, target_response_list)
-        logger.debug("Finished getting judge scores.")
+        logger.debug(f"Finished getting scores from JUDGE [{args.judge_model}].")
         
         # Print prompts, responses, and scores
         for i,(prompt,improv,response, score) in enumerate(zip(adv_prompt_list,improv_list,target_response_list, judge_scores)):
-            logger.debug(f"{i+1}/{batchsize}\n\n[IMPROVEMENT]:\n{improv} \n\n[PROMPT]:\n{prompt} \n\n[RESPONSE]:\n{response}\n\n[SCORE]:\n{score}\n\n")
+            logger.debug(
+                f"\n{'~'*36}\n"
+                f"Stream {i+1}/{batchsize}\n"
+                f"{'~'*36}\n\n"
+                f"[ATTACKER ({args.attack_model}) - IMPROVEMENT]:\n{improv}\n\n"
+                f"[ATTACKER ({args.attack_model}) - ADVERSARIAL PROMPT]:\n{prompt}\n\n"
+                f"[TARGET ({args.target_model}) - RESPONSE]:\n{response}\n\n"
+                f"[JUDGE ({args.judge_model}) - SCORE]: {score}\n"
+            )
 
         # WandB log values
         wandb_logger.log(iteration, extracted_attack_list, target_response_list, judge_scores)
@@ -82,7 +90,7 @@ if __name__ == '__main__':
         "--attack-model",
         default = "vicuna-13b-v1.5",
         help = "Name of attacking model.",
-        choices=["vicuna-13b-v1.5", "llama-2-7b-chat-hf", "gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-5-nano-2025-08-07", "claude-instant-1.2", "claude-2.1", "gemini-pro", 
+        choices=["vicuna-13b-v1.5", "llama-2-7b-chat-hf", "gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-4.1-mini-2025-04-14", "gpt-5-nano-2025-08-07", "claude-instant-1.2", "claude-2.1", "gemini-pro", 
         "mixtral"]
     )
     parser.add_argument(
@@ -104,7 +112,7 @@ if __name__ == '__main__':
         "--target-model",
         default = "vicuna-13b-v1.5",
         help = "Name of target model.",
-        choices=["vicuna-13b-v1.5", "llama-2-7b-chat-hf", "gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-5-nano-2025-08-07", "claude-instant-1.2", "claude-2.1", "gemini-pro",]
+        choices=["vicuna-13b-v1.5", "llama-2-7b-chat-hf", "gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-4.1-mini-2025-04-14", "gpt-5-nano-2025-08-07", "claude-instant-1.2", "claude-2.1", "gemini-pro",]
     )
     parser.add_argument(
         "--target-max-n-tokens",
@@ -119,7 +127,7 @@ if __name__ == '__main__':
         "--judge-model",
         default="gcg", #TODO changed
         help="Name of judge model. Defaults to the Llama Guard model from JailbreakBench.",
-        choices=["gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-5-nano-2025-08-07", "no-judge","jailbreakbench","gcg"]
+        choices=["gpt-3.5-turbo-1106", "gpt-4-0125-preview", "gpt-4.1-mini-2025-04-14", "gpt-5-nano-2025-08-07", "no-judge","jailbreakbench","gcg"]
     )
     parser.add_argument(
         "--judge-max-n-tokens",
